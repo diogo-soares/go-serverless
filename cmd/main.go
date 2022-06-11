@@ -3,14 +3,13 @@ package main
 import (
 	"os"
 
-	"github.com/diogo-soares/go-serverless/handlers"
-
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/aws/aws-sdk-go-v2"
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
+	"github.com/diogo-soares/go-serverless/pkg/handlers"
 )
 
 var (
@@ -25,12 +24,11 @@ func main() {
 	if err != nil {
 		return
 	}
-
 	dynaClient = dynamodb.New(awsSession)
 	lambda.Start(handler)
 }
 
-const tableName = "LambdaInGoUser"
+const tableName = "go-serverless-yt"
 
 func handler(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse, error) {
 	switch req.HTTPMethod {
@@ -43,7 +41,6 @@ func handler(req events.APIGatewayProxyRequest) (*events.APIGatewayProxyResponse
 	case "DELETE":
 		return handlers.DeleteUser(req, tableName, dynaClient)
 	default:
-		return handler.UnhandledMethod()
+		return handlers.UnhandledMethod()
 	}
-
 }
